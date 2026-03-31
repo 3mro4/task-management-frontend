@@ -1,1 +1,39 @@
-<p>project-list works!</p>
+<h2>Projects</h2>
+
+<div *ngIf="isLoading">
+  <p>Loading...</p>
+</div>
+
+<table *ngIf="!isLoading && projects.length > 0">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let project of projects">
+      <td>{{ project.name }}</td>
+      <td>{{ project.description }}</td>
+      <td>{{ project.createdAt | date }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<p *ngIf="!isLoading && projects.length === 0">
+  No projects found
+</p>
+
+<div>
+  <button (click)="prevPage()" [disabled]="page === 0">
+    Prev
+  </button>
+
+  <span>Page {{ page + 1 }} / {{ totalPages }}</span>
+
+  <button (click)="nextPage()" [disabled]="page >= totalPages - 1">
+    Next
+  </button>
+</div>
