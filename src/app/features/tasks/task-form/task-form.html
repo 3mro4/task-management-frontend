@@ -1,1 +1,70 @@
-<p>task-form works!</p>
+<h2>Create Task</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <div>
+    <label>Title</label>
+    <input type="text" formControlName="title" />
+    <p *ngIf="form.controls.title.touched && form.controls.title.invalid">
+      Title is required.
+    </p>
+  </div>
+
+  <div>
+    <label>Description</label>
+    <textarea formControlName="description"></textarea>
+    <p *ngIf="form.controls.description.touched && form.controls.description.invalid">
+      Description is required.
+    </p>
+  </div>
+
+  <div>
+    <label>Priority</label>
+    <select formControlName="priority">
+      <option *ngFor="let priority of priorities" [value]="priority">
+        {{ priority }}
+      </option>
+    </select>
+  </div>
+
+  <div>
+    <label>Due Date</label>
+    <input type="date" formControlName="dueDate" />
+    <p *ngIf="form.controls.dueDate.touched && form.controls.dueDate.invalid">
+      Due date is required.
+    </p>
+  </div>
+
+  <div>
+    <label>Project</label>
+    <select formControlName="projectId">
+      <option value="">Select project</option>
+      <option *ngFor="let project of projects" [value]="project.id">
+        {{ project.name }}
+      </option>
+    </select>
+    <p *ngIf="form.controls.projectId.touched && form.controls.projectId.invalid">
+      Project is required.
+    </p>
+  </div>
+
+  <div>
+    <label>Assignee</label>
+    <select formControlName="assigneeId">
+      <option value="">Select user</option>
+      <option *ngFor="let user of users" [value]="user.id">
+        {{ user.firstName }} {{ user.lastName }}
+      </option>
+    </select>
+    <p *ngIf="form.controls.assigneeId.touched && form.controls.assigneeId.invalid">
+      Assignee is required.
+    </p>
+  </div>
+
+  <button type="submit" [disabled]="isLoading">
+    {{ isLoading ? 'Saving...' : 'Create Task' }}
+  </button>
+</form>
+
+<p *ngIf="successMessage">{{ successMessage }}</p>
+<p *ngIf="errorMessage">{{ errorMessage }}</p>
