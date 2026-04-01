@@ -1,1 +1,20 @@
-<p>task-detail works!</p>
+<h2>Task Details</h2>
+
+<div *ngIf="isLoading">
+  <p>Loading...</p>
+</div>
+
+<div *ngIf="errorMessage">
+  <p>{{ errorMessage }}</p>
+</div>
+
+<div *ngIf="!isLoading && task">
+  <p><strong>Title:</strong> {{ task.title }}</p>
+  <p><strong>Description:</strong> {{ task.description }}</p>
+  <p><strong>Priority:</strong> {{ task.priority }}</p>
+  <p><strong>Status:</strong> {{ task.status }}</p>
+  <p><strong>Due Date:</strong> {{ task.dueDate | date }}</p>
+  <p><strong>Project:</strong> {{ task.projectName }}</p>
+  <p><strong>Assignee:</strong> {{ task.assigneeName }}</p>
+  <p><strong>Created At:</strong> {{ task.createdAt | date }}</p>
+</div>
