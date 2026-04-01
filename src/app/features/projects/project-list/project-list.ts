@@ -1,14 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectService } from '../../../core/services/project.service';
-import { Project } from '../../../core/models/project';
+import {  ProjectDto } from '../../../core/models/project';
 
 @Component({
   selector: 'app-project-list',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './project-list.html',
-  styleUrls: ['./project-list.css']
+ styleUrl: './project-list.css'
 })
 export class ProjectList implements OnInit {
 
