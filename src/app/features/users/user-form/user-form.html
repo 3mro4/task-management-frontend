@@ -1,1 +1,101 @@
-<p>user-form works!</p>
+<div class="page-container">
+
+  <div class="page-header">
+    <button class="btn btn-link back-btn" routerLink="/users">
+      ← Back to Users
+    </button>
+    <h1>Create User</h1>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <form (ngSubmit)="onSubmit()">
+
+        <div class="name-row">
+          <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="form.firstName"
+              name="firstName"
+              placeholder="First"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Middle Name</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="form.middleName"
+              name="middleName"
+              placeholder="Middle"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="form.lastName"
+              name="lastName"
+              placeholder="Last"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            [(ngModel)]="form.email"
+            name="email"
+            placeholder="Enter email"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            [(ngModel)]="form.password"
+            name="password"
+            placeholder="Enter password"
+            required
+          />
+        </div>
+
+        @if (error) {
+          <div class="alert alert-danger">{{ error }}</div>
+        }
+
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            routerLink="/users"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="loading"
+          >
+            @if (loading) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Create User
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
