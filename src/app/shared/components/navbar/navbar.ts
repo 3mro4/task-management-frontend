@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject} from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -17,6 +17,6 @@ export class Navbar {
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
-  
+
 }
 
