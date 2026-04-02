@@ -1,39 +1,41 @@
-<h2>Projects</h2>
+<div class="page">
 
-<div *ngIf="isLoading">
-  <p>Loading...</p>
+  <div class="header">
+    <h1>Projects</h1>
+    <button class="primary">+ New Project</button>
+  </div>
+
+  <div class="table-card">
+
+    <table *ngIf="projects.length > 0; else noProjects">
+      <thead>
+        <tr>
+          <th>Project Name</th>
+          <th>Description</th>
+          <th>Created Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let project of projects">
+          <td class="bold">{{ project.name }}</td>
+          <td>{{ project.description }}</td>
+          <td>{{ project.createdAt | date:'M/d/yyyy' }}</td>
+          <td class="actions">👁</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noProjects>
+      <div class="empty-state">No projects found.</div>
+    </ng-template>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+  <button (click)="prevPage()" [disabled]="page === 0">Previous</button>
+  <span>Page {{ page + 1 }} of {{ totalPages }}</span>
+  <button (click)="nextPage()" [disabled]="page >= totalPages - 1">Next</button>
 </div>
 
-<table *ngIf="!isLoading && projects.length > 0">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Created</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr *ngFor="let project of projects">
-      <td>{{ project.name }}</td>
-      <td>{{ project.description }}</td>
-      <td>{{ project.createdAt | date }}</td>
-    </tr>
-  </tbody>
-</table>
-
-<p *ngIf="!isLoading && projects.length === 0">
-  No projects found
-</p>
-
-<div>
-  <button (click)="prevPage()" [disabled]="page === 0">
-    Prev
-  </button>
-
-  <span>Page {{ page + 1 }} / {{ totalPages }}</span>
-
-  <button (click)="nextPage()" [disabled]="page >= totalPages - 1">
-    Next
-  </button>
+  </div>
 </div>

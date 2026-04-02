@@ -1,24 +1,36 @@
-<h2>Create Project</h2>
+<div class="page">
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div>
-    <label>Project Name</label>
-    <input type="text" formControlName="name" />
-    <p *ngIf="form.controls.name.touched && form.controls.name.invalid">
-      Project name is required.
-    </p>
+  <div class="form-header">
+    <div class="title-group">
+      <span class="back-arrow">←</span>
+      <h1>Create Project</h1>
+    </div>
   </div>
 
-  <div>
-    <label>Description</label>
-    <textarea formControlName="description"></textarea>
-    <p *ngIf="form.controls.description.touched && form.controls.description.invalid">
-      Description is required.
-    </p>
+  <div class="form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label>Project Name</label>
+        <input type="text" formControlName="name" placeholder="Enter project name" />
+        <p *ngIf="form.controls.name.touched && form.controls.name.invalid" class="error">
+          Project name is required.
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea formControlName="description" rows="6" placeholder="Enter project description"></textarea>
+        <p *ngIf="form.controls.description.touched && form.controls.description.invalid" class="error">
+          Description is required.
+        </p>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="submit-btn">Create Project</button>
+        <button type="button" class="cancel-btn">Cancel</button>
+      </div>
+
+    </form>
   </div>
-
-  <button type="submit">Create</button>
-</form>
-
-<p *ngIf="successMessage">{{ successMessage }}</p>
-<p *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>

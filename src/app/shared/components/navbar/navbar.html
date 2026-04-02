@@ -1,11 +1,16 @@
-<nav class="navbar">
-  <div class="logo">Task Manager</div>
+<div class="sidebar">
+  <div class="logo">
+    <span class="logo-icon">✔</span>
+    <span class="logo-text">Task Manager</span>
+  </div>
 
-  <ul class="nav-links">
-    <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
-    <li><a routerLink="/users" routerLinkActive="active">Users</a></li>
-    <li><a routerLink="/projects" routerLinkActive="active">Projects</a></li>
-    <li><a routerLink="/tasks" routerLinkActive="active">Tasks</a></li>
-    <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
-  </ul>
-</nav>
+  <nav>
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
+    <a routerLink="/projects" routerLinkActive="active">Projects</a>
+    <a routerLink="/users" routerLinkActive="active">Users</a>
+    <a routerLink="/profile" routerLinkActive="active">Profile</a>
+  </nav>
+<button class="logout-btn" (click)="logout()">Logout</button>
+
+</div>

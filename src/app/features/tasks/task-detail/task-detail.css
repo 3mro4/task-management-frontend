@@ -1,7 +1,22 @@
-h2 {
-  margin-bottom: 16px;
+form {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-p {
-  margin-bottom: 10px;
+input, textarea, select {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+button {
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
 }

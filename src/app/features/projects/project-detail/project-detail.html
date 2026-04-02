@@ -1,35 +1,60 @@
-<h2>Project Details</h2>
+<div class="page" *ngIf="project">
 
-<div *ngIf="isLoading">
-  <p>Loading...</p>
+  <div class="detail-header">
+    <div class="title-group">
+      <span class="back-arrow">←</span>
+      <h1>{{ project.name }}</h1>
+    </div>
+  </div>
+
+  <div class="detail-grid">
+
+    <div class="detail-card main-card">
+      <h3>Project Details</h3>
+
+      <div class="detail-row">
+        <span class="label">Name</span>
+        <p>{{ project.name }}</p>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Description</span>
+        <p>{{ project.description }}</p>
+      </div>
+
+      <div class="detail-row split">
+        <div>
+          <span class="label">Created At</span>
+          <p>{{ project.createdAt | date:'M/d/yyyy' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-card side-card">
+      <h3>Members</h3>
+
+      <ul *ngIf="project.currentMembers.length > 0; else noMembers">
+        <li *ngFor="let member of project.currentMembers">{{ member }}</li>
+      </ul>
+
+      <ng-template #noMembers>
+        <p>No members found.</p>
+      </ng-template>
+    </div>
+
+    <div class="detail-card full-card">
+      <h3>Tasks by Priority</h3>
+
+      <div class="priority-grid">
+        <div class="priority-box" *ngFor="let item of getPriorityEntries()">
+          <span>{{ item.key }}</span>
+          <strong>{{ item.value }}</strong>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div *ngIf="errorMessage">
-  <p>{{ errorMessage }}</p>
-</div>
-
-<div *ngIf="!isLoading && project">
-  <p><strong>Name:</strong> {{ project.name }}</p>
-  <p><strong>Description:</strong> {{ project.description }}</p>
-  <p><strong>Created At:</strong> {{ project.createdAt | date }}</p>
-
-  <h3>Current Members</h3>
-  <ul *ngIf="project.currentMembers.length > 0; else noMembers">
-    <li *ngFor="let member of project.currentMembers">{{ member }}</li>
-  </ul>
-
-  <ng-template #noMembers>
-    <p>No members found.</p>
-  </ng-template>
-
-  <h3>Tasks By Priority</h3>
-  <ul *ngIf="getPriorityEntries().length > 0; else noTasks">
-    <li *ngFor="let item of getPriorityEntries()">
-      {{ item.key }}: {{ item.value }}
-    </li>
-  </ul>
-
-  <ng-template #noTasks>
-    <p>No task data found.</p>
-  </ng-template>
-</div>
+<div *ngIf="isLoading" class="state-box">Loading...</div>
+<div *ngIf="errorMessage" class="state-box error">{{ errorMessage }}</div>

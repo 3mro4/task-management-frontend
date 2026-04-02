@@ -1,20 +1,33 @@
-<h2>Task Details</h2>
+<div class="page" *ngIf="task">
 
-<div *ngIf="isLoading">
-  <p>Loading...</p>
-</div>
+  <div class="header">
+    <h1>{{ task.title }}</h1>
+    <button class="primary">Edit</button>
+  </div>
 
-<div *ngIf="errorMessage">
-  <p>{{ errorMessage }}</p>
-</div>
+  <div class="grid">
 
-<div *ngIf="!isLoading && task">
-  <p><strong>Title:</strong> {{ task.title }}</p>
-  <p><strong>Description:</strong> {{ task.description }}</p>
-  <p><strong>Priority:</strong> {{ task.priority }}</p>
-  <p><strong>Status:</strong> {{ task.status }}</p>
-  <p><strong>Due Date:</strong> {{ task.dueDate | date }}</p>
-  <p><strong>Project:</strong> {{ task.projectName }}</p>
-  <p><strong>Assignee:</strong> {{ task.assigneeName }}</p>
-  <p><strong>Created At:</strong> {{ task.createdAt | date }}</p>
+    <div class="card">
+      <h3>Task Details</h3>
+
+      <p><strong>Title:</strong> {{ task.title }}</p>
+      <p><strong>Description:</strong> {{ task.description }}</p>
+
+      <div class="row">
+        <p><strong>Due:</strong> {{ task.dueDate | date }}</p>
+        <p><strong>Created:</strong> {{ task.createdAt | date }}</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Metadata</h3>
+
+      <p>Status: <span class="badge">{{ task.status }}</span></p>
+      <p>Priority: <span class="badge">{{ task.priority }}</span></p>
+      <p>Project: {{ task.projectName }}</p>
+      <p>Assignee: {{ task.assigneeName }}</p>
+    </div>
+
+  </div>
+
 </div>
