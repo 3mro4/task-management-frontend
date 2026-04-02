@@ -1,1 +1,24 @@
-<p>project-form works!</p>
+<h2>Create Project</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <label>Project Name</label>
+    <input type="text" formControlName="name" />
+    <p *ngIf="form.controls.name.touched && form.controls.name.invalid">
+      Project name is required.
+    </p>
+  </div>
+
+  <div>
+    <label>Description</label>
+    <textarea formControlName="description"></textarea>
+    <p *ngIf="form.controls.description.touched && form.controls.description.invalid">
+      Description is required.
+    </p>
+  </div>
+
+  <button type="submit">Create</button>
+</form>
+
+<p *ngIf="successMessage">{{ successMessage }}</p>
+<p *ngIf="errorMessage">{{ errorMessage }}</p>
