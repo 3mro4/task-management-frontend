@@ -5,11 +5,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { TaskService } from '../../../core/services/task.service';
 import { ProjectService } from '../../../core/services/project.service';
-import { UserService } from '../../../core/services/user.service';
-
+import { UserService } from '../../../core/services/user';
 import { CreateTaskRequest, TaskPriority } from '../../../core/models/task';
 import { Project } from '../../../core/models/project';
-import { UserDto } from '../../../core/models/user';
+import { User } from '../../../core/models/user';
 
 @Component({
   selector: 'app-task-form',
@@ -26,7 +25,7 @@ export class TaskForm implements OnInit {
   private userService = inject(UserService);
 
   projects: Project[] = [];
-  users: UserDto[] = [];
+  users: User[] = [];
 
   isLoading = false;
   successMessage = '';
@@ -60,7 +59,7 @@ export class TaskForm implements OnInit {
   }
 
   loadUsers(): void {
-    this.userService.getAllUsers(0, 100).subscribe({
+    this.userService.getAll(0, 100).subscribe({
       next: (res) => {
         this.users = res.content;
       },
