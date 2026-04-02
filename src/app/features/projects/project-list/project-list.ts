@@ -2,7 +2,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectService } from '../../../core/services/project.service';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import {  ProjectDto } from '../../../core/models/project';
+=======
+import { ProjectDto } from '../../../core/models/project';
+>>>>>>> feature/project-detail-page
 =======
 import { ProjectDto } from '../../../core/models/project';
 >>>>>>> feature/project-detail-page
