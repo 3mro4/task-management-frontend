@@ -1,1 +1,11 @@
-<p>confirmation-dialog works!</p>
+<div class="overlay" *ngIf="isVisible">
+  <div class="dialog-box">
+    <h3>{{ title }}</h3>
+    <p>{{ message }}</p>
+
+    <div class="actions">
+      <button (click)="onCancel()">Cancel</button>
+      <button (click)="onConfirm()">Confirm</button>
+    </div>
+  </div>
+</div>
