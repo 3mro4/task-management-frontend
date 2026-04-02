@@ -1,28 +1,29 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProjectService } from '../../../core/services/project.service';
 import { ProjectDetailsDto } from '../../../core/models/project';
 
 @Component({
   selector: 'app-project-detail',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './project-detail.html',
-  styleUrls: ['./project-detail.css']
+  styleUrl: './project-detail.css'
 })
 export class ProjectDetail implements OnInit {
-
-  private route = inject(ActivatedRoute);
-  private projectService = inject(ProjectService);
 
   project: ProjectDetailsDto | null = null;
   isLoading = false;
   errorMessage = '';
 
+  constructor(
+    private route: ActivatedRoute,
+    private projectService: ProjectService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-
     if (id) {
       this.loadProject(id);
     } else {
@@ -32,23 +33,30 @@ export class ProjectDetail implements OnInit {
 
   loadProject(id: string): void {
     this.isLoading = true;
-    this.errorMessage = '';
-
     this.projectService.getById(id).subscribe({
-      next: (res: ProjectDetailsDto) => {
+      next: (res) => {
         this.project = res;
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error(err);
+      error: () => {
         this.errorMessage = 'Failed to load project details.';
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
   getPriorityEntries(): { key: string; value: number }[] {
     if (!this.project?.tasksByPriority) return [];
-    return Object.entries(this.project.tasksByPriority).map(([key, value]) => ({ key, value }));
+    return Object.entries(this.project.tasksByPriority)
+      .map(([key, value]) => ({ key, value }));
+  }
+
+  getPriorityColor(priority: string): string {
+    const map: Record<string, string> = {
+      LOW: '#198754', MEDIUM: '#fd7e14', HIGH: '#dc3545'
+    };
+    return map[priority] ?? '#6c757d';
   }
 }

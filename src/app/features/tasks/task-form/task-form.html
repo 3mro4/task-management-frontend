@@ -1,70 +1,93 @@
-<h2>Create Task</h2>
+<div class="page-container">
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-
-  <div>
-    <label>Title</label>
-    <input type="text" formControlName="title" />
-    <p *ngIf="form.controls.title.touched && form.controls.title.invalid">
-      Title is required.
-    </p>
+  <div class="page-header">
+    <button class="btn btn-link back-btn" routerLink="/tasks">
+      ← Back to Tasks
+    </button>
+    <h1>Create Task</h1>
   </div>
 
-  <div>
-    <label>Description</label>
-    <textarea formControlName="description"></textarea>
-    <p *ngIf="form.controls.description.touched && form.controls.description.invalid">
-      Description is required.
-    </p>
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" formControlName="title" placeholder="Enter task title" />
+          @if (form.controls.title.touched && form.controls.title.invalid) {
+            <div class="text-danger small mt-1">Title is required.</div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" formControlName="description" rows="3" placeholder="Enter task description"></textarea>
+          @if (form.controls.description.touched && form.controls.description.invalid) {
+            <div class="text-danger small mt-1">Description is required.</div>
+          }
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <label class="form-label">Priority</label>
+            <select class="form-select" formControlName="priority">
+              @for (priority of priorities; track priority) {
+                <option [value]="priority">{{ priority }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Due Date</label>
+            <input type="date" class="form-control" formControlName="dueDate" />
+            @if (form.controls.dueDate.touched && form.controls.dueDate.invalid) {
+              <div class="text-danger small mt-1">Due date is required.</div>
+            }
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Project</label>
+            <select class="form-select" formControlName="projectId">
+              <option value="">Select project</option>
+              @for (project of projects; track project.id) {
+                <option [value]="project.id">{{ project.name }}</option>
+              }
+            </select>
+            @if (form.controls.projectId.touched && form.controls.projectId.invalid) {
+              <div class="text-danger small mt-1">Project is required.</div>
+            }
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Assignee</label>
+            <select class="form-select" formControlName="assigneeId">
+              <option value="">Select user</option>
+              @for (user of users; track user.id) {
+                <option [value]="user.id">{{ user.firstName }} {{ user.lastName }}</option>
+              }
+            </select>
+            @if (form.controls.assigneeId.touched && form.controls.assigneeId.invalid) {
+              <div class="text-danger small mt-1">Assignee is required.</div>
+            }
+          </div>
+        </div>
+
+        @if (error) {
+          <div class="alert alert-danger">{{ error }}</div>
+        }
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline-secondary" routerLink="/tasks">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            @if (loading) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Create Task
+          </button>
+        </div>
+
+      </form>
+    </div>
   </div>
 
-  <div>
-    <label>Priority</label>
-    <select formControlName="priority">
-      <option *ngFor="let priority of priorities" [value]="priority">
-        {{ priority }}
-      </option>
-    </select>
-  </div>
-
-  <div>
-    <label>Due Date</label>
-    <input type="date" formControlName="dueDate" />
-    <p *ngIf="form.controls.dueDate.touched && form.controls.dueDate.invalid">
-      Due date is required.
-    </p>
-  </div>
-
-  <div>
-    <label>Project</label>
-    <select formControlName="projectId">
-      <option value="">Select project</option>
-      <option *ngFor="let project of projects" [value]="project.id">
-        {{ project.name }}
-      </option>
-    </select>
-    <p *ngIf="form.controls.projectId.touched && form.controls.projectId.invalid">
-      Project is required.
-    </p>
-  </div>
-
-  <div>
-    <label>Assignee</label>
-    <select formControlName="assigneeId">
-      <option value="">Select user</option>
-      <option *ngFor="let user of users" [value]="user.id">
-        {{ user.firstName }} {{ user.lastName }}
-      </option>
-    </select>
-    <p *ngIf="form.controls.assigneeId.touched && form.controls.assigneeId.invalid">
-      Assignee is required.
-    </p>
-  </div>
-
-  <button type="submit" [disabled]="isLoading">
-    {{ isLoading ? 'Saving...' : 'Create Task' }}
-  </button>
-</form>
-
-<p *ngIf="successMessage">{{ successMessage }}</p>
-<p *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>

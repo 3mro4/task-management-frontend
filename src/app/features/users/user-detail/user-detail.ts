@@ -1,13 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../core/services/user';
 import { User, UpdateUserRequest } from '../../../core/models/user';
 
 @Component({
   selector: 'app-user-detail',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './user-detail.html',
   styleUrl: './user-detail.css',
 })

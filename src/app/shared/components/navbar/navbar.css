@@ -21,7 +21,7 @@
 }
 
 .logo-img {
-  width: 180px;
+  width: 160px;
   height: auto;
   mix-blend-mode: multiply;
 }
@@ -29,14 +29,21 @@
 nav {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
+  flex: 1;
 }
 
 nav a {
-  padding: 10px;
+  padding: 10px 14px;
   border-radius: 10px;
   text-decoration: none;
   color: #374151;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+nav a:hover {
+  background: #f3f4f6;
 }
 
 nav a.active {
@@ -44,12 +51,82 @@ nav a.active {
   color: white;
 }
 
-.logout-btn {
+.user-section {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 1rem;
   margin-top: auto;
-  color: #6b7280;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #6c5ce7;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  font-size: 0.75rem;
+  color: #6c757d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.logout-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: #6c757d;
   cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
 }
 
 .logout-btn:hover {
+  background: #fff0f0;
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+
+.user-info:hover {
   background: #f3f4f6;
 }

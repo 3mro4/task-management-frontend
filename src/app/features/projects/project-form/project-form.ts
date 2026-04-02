@@ -1,28 +1,33 @@
-import { Component, inject } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { ProjectService } from '../../../core/services/project.service';
 import { CreateProjectRequest } from '../../../core/models/project';
 
 @Component({
   selector: 'app-project-form',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './project-form.html',
-  styleUrls: ['./project-form.css']
+  styleUrl: './project-form.css'
 })
 export class ProjectForm {
 
-  private fb = inject(FormBuilder);
-  private projectService = inject(ProjectService);
+  loading = false;
+error = '';
+form: any;
 
-  successMessage = '';
-  errorMessage = '';
-
-  form = this.fb.group({
+constructor(
+  private fb: FormBuilder,
+  private projectService: ProjectService,
+  private router: Router,
+  private cdr: ChangeDetectorRef
+) {
+  this.form = this.fb.group({
     name: ['', Validators.required],
     description: ['', Validators.required]
   });
+}
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -30,21 +35,20 @@ export class ProjectForm {
       return;
     }
 
+    this.loading = true;
+    this.error = '';
+
     const request: CreateProjectRequest = {
       name: this.form.value.name!,
       description: this.form.value.description!
     };
 
     this.projectService.create(request).subscribe({
-      next: () => {
-        this.successMessage = 'Project created successfully.';
-        this.errorMessage = '';
-        this.form.reset();
-      },
+      next: (project) => this.router.navigate(['/projects', project.id]),
       error: (err) => {
-        console.error(err);
-        this.errorMessage = 'Failed to create project.';
-        this.successMessage = '';
+        this.error = err.error?.message || 'Failed to create project.';
+        this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }

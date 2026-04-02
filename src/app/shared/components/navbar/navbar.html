@@ -1,15 +1,35 @@
 <div class="sidebar">
+
   <div class="logo">
     <img src="munazm-logo.png" alt="Munazm" class="logo-img" />
   </div>
 
   <nav>
-    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-    <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
-    <a routerLink="/projects" routerLinkActive="active">Projects</a>
-    <a routerLink="/users" routerLinkActive="active">Users</a>
-    <a routerLink="/profile" routerLinkActive="active">Profile</a>
+    <a routerLink="/dashboard" routerLinkActive="active">
+      Dashboard
+    </a>
+    <a routerLink="/tasks" routerLinkActive="active">
+      Tasks
+    </a>
+    <a routerLink="/projects" routerLinkActive="active">
+      Projects
+    </a>
+    <a routerLink="/users" routerLinkActive="active">
+      Users
+    </a>
   </nav>
-  <button class="logout-btn" (click)="logout()">Logout</button>
+
+  <div class="user-section">
+ <a routerLink="/profile" class="user-info">
+  <div class="user-avatar">{{ getInitials() }}</div>
+  <div class="user-details">
+    <span class="user-name">{{ firstName }}</span>
+    <span class="user-email">{{ email }}</span>
+  </div>
+</a>
+    <button class="logout-btn" (click)="logout()">
+      <span>⎋</span> Logout
+    </button>
+  </div>
 
 </div>

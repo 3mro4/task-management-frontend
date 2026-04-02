@@ -1,60 +1,72 @@
-<div class="page" *ngIf="project">
+<div class="page-container">
 
-  <div class="detail-header">
-    <div class="title-group">
-      <span class="back-arrow">←</span>
-      <h1>{{ project.name }}</h1>
-    </div>
+  <div class="page-header">
+    <button class="btn btn-link back-btn" routerLink="/projects">
+      ← Back to Projects
+    </button>
   </div>
 
-  <div class="detail-grid">
+  @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary"></div>
+    </div>
+  }
 
-    <div class="detail-card main-card">
-      <h3>Project Details</h3>
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
 
-      <div class="detail-row">
-        <span class="label">Name</span>
-        <p>{{ project.name }}</p>
-      </div>
-
-      <div class="detail-row">
-        <span class="label">Description</span>
-        <p>{{ project.description }}</p>
-      </div>
-
-      <div class="detail-row split">
-        <div>
-          <span class="label">Created At</span>
-          <p>{{ project.createdAt | date:'M/d/yyyy' }}</p>
+  @if (!isLoading && !errorMessage && project) {
+    <div class="card mb-3">
+      <div class="card-body">
+        <h2 class="project-title">{{ project.name }}</h2>
+        <hr />
+        <div class="info-grid">
+          <div class="info-row">
+            <span class="info-label">Description</span>
+            <span>{{ project.description }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Created Date</span>
+            <span>{{ project.createdAt | date:'longDate' }}</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="detail-card side-card">
-      <h3>Members</h3>
-
-      <ul *ngIf="project.currentMembers.length > 0; else noMembers">
-        <li *ngFor="let member of project.currentMembers">{{ member }}</li>
-      </ul>
-
-      <ng-template #noMembers>
-        <p>No members found.</p>
-      </ng-template>
-    </div>
-
-    <div class="detail-card full-card">
-      <h3>Tasks by Priority</h3>
-
-      <div class="priority-grid">
-        <div class="priority-box" *ngFor="let item of getPriorityEntries()">
-          <span>{{ item.key }}</span>
-          <strong>{{ item.value }}</strong>
-        </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Current Members</h5>
+        @if (project.currentMembers.length > 0) {
+          <div class="members-list">
+            @for (member of project.currentMembers; track member) {
+              <div class="member-item">
+                <div class="member-avatar">{{ member[0] }}</div>
+                <span>{{ member }}</span>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="text-muted">No members assigned.</p>
+        }
       </div>
     </div>
 
-  </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Tasks by Priority</h5>
+        <div class="priority-grid">
+          @for (item of getPriorityEntries(); track item.key) {
+            <div class="priority-box" [style.border-color]="getPriorityColor(item.key)">
+              <div class="priority-label" [style.color]="getPriorityColor(item.key)">
+                {{ item.key }} Priority
+              </div>
+              <div class="priority-value">{{ item.value }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
 </div>
-
-<div *ngIf="isLoading" class="state-box">Loading...</div>
-<div *ngIf="errorMessage" class="state-box error">{{ errorMessage }}</div>

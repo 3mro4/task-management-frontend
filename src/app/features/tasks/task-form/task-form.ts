@@ -1,38 +1,38 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
-
+import { Router, RouterLink } from '@angular/router';
 import { TaskService } from '../../../core/services/task.service';
 import { ProjectService } from '../../../core/services/project.service';
 import { UserService } from '../../../core/services/user';
 import { CreateTaskRequest, TaskPriority } from '../../../core/models/task';
-import { Project } from '../../../core/models/project';
+import { ProjectDto } from '../../../core/models/project';
 import { User } from '../../../core/models/user';
 
 @Component({
   selector: 'app-task-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './task-form.html',
   styleUrl: './task-form.css'
 })
 export class TaskForm implements OnInit {
 
-  private fb = inject(FormBuilder);
-  private taskService = inject(TaskService);
-  private projectService = inject(ProjectService);
-  private userService = inject(UserService);
+  projects: ProjectDto[] = [];
+users: User[] = [];
+loading = false;
+error = '';
+priorities: TaskPriority[] = ['LOW', 'MEDIUM', 'HIGH'];
+form: any;
 
-  projects: Project[] = [];
-  users: User[] = [];
-
-  isLoading = false;
-  successMessage = '';
-  errorMessage = '';
-
-  priorities: TaskPriority[] = ['LOW', 'MEDIUM', 'HIGH'];
-
-  form = this.fb.group({
+constructor(
+  private fb: FormBuilder,
+  private taskService: TaskService,
+  private projectService: ProjectService,
+  private userService: UserService,
+  private router: Router,
+  private cdr: ChangeDetectorRef
+) {
+  this.form = this.fb.group({
     title: ['', Validators.required],
     description: ['', Validators.required],
     priority: ['MEDIUM' as TaskPriority, Validators.required],
@@ -40,31 +40,15 @@ export class TaskForm implements OnInit {
     projectId: ['', Validators.required],
     assigneeId: ['', Validators.required]
   });
+}
+
 
   ngOnInit(): void {
-    this.loadProjects();
-    this.loadUsers();
-  }
-
-  loadProjects(): void {
     this.projectService.getAll(0, 100).subscribe({
-      next: (res) => {
-        this.projects = res.content;
-      },
-      error: (err: HttpErrorResponse) => {
-        console.error(err);
-      }
+      next: (res) => { this.projects = res.content; this.cdr.detectChanges(); }
     });
-  }
-
-  loadUsers(): void {
     this.userService.getAll(0, 100).subscribe({
-      next: (res) => {
-        this.users = res.content;
-      },
-      error: (err: HttpErrorResponse) => {
-        console.error(err);
-      }
+      next: (res) => { this.users = res.content; this.cdr.detectChanges(); }
     });
   }
 
@@ -74,9 +58,8 @@ export class TaskForm implements OnInit {
       return;
     }
 
-    this.isLoading = true;
-    this.successMessage = '';
-    this.errorMessage = '';
+    this.loading = true;
+    this.error = '';
 
     const request: CreateTaskRequest = {
       title: this.form.value.title!,
@@ -88,19 +71,11 @@ export class TaskForm implements OnInit {
     };
 
     this.taskService.create(request).subscribe({
-      next: () => {
-        this.successMessage = 'Task created successfully.';
-        this.errorMessage = '';
-        this.isLoading = false;
-        this.form.reset({
-          priority: 'MEDIUM'
-        });
-      },
-      error: (err: HttpErrorResponse) => {
-        console.error(err);
-        this.errorMessage = 'Failed to create task.';
-        this.successMessage = '';
-        this.isLoading = false;
+      next: (task) => this.router.navigate(['/tasks', task.id]),
+      error: (err) => {
+        this.error = err.error?.message || 'Failed to create task.';
+        this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }

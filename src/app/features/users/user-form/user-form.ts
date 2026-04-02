@@ -1,13 +1,13 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../core/services/user';
 import { RegisterRequest } from '../../../core/models/auth';
 
 @Component({
   selector: 'app-user-form',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './user-form.html',
   styleUrl: './user-form.css',
 })

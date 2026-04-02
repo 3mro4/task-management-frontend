@@ -1,95 +1,68 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.page-container {
+  padding: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-.header {
+.page-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
 }
 
-.primary {
-  background: linear-gradient(90deg, #4f46e5, #6366f1);
-  color: white;
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 0.25rem;
+}
+
+.card {
   border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 12px;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
-.table-card {
-  background: white;
-  border-radius: 16px;
-  padding: 16px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th {
-  text-align: left;
-  color: #6b7280;
-  font-size: 13px;
-  padding: 12px;
-}
-
-td {
-  padding: 14px 12px;
-  border-top: 1px solid #f1f5f9;
-}
-
-.bold {
+.table thead th {
+  background: #f8f9fa;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6c757d;
   font-weight: 600;
+  padding: 1rem 1.25rem;
 }
 
-.badge {
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
+.table tbody td {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
 }
 
-/* PRIORITY */
-.priority.high {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
-.priority.medium {
-  background: #fef3c7;
-  color: #d97706;
-}
-
-.priority.low {
-  background: #dcfce7;
-  color: #16a34a;
-}
-
-/* STATUS */
-.status.todo {
-  background: #e5e7eb;
-}
-
-.status.in_progress {
-  background: #dbeafe;
-  color: #2563eb;
-}
-
-.status.done {
-  background: #dcfce7;
-  color: #16a34a;
-}
-
-.actions {
+.clickable-row {
   cursor: pointer;
+  transition: background 0.15s;
+}
+
+.clickable-row:hover {
+  background: #f8f7ff !important;
+}
+
+.btn-primary {
+  background-color: #6c5ce7;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.25rem;
+  font-weight: 500;
+}
+
+.btn-primary:hover { background-color: #5a4bd1; }
+
+.pagination-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }

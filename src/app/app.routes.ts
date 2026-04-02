@@ -49,16 +49,16 @@ export const routes: Routes = [
       import('./features/projects/project-list/project-list').then((m) => m.ProjectList),
     canActivate: [authGuard],
   },
+ {
+    path: 'projects/new',
+    loadComponent: () =>
+      import('./features/projects/project-form/project-form').then((m) => m.ProjectForm),
+    canActivate: [authGuard],
+  },
   {
     path: 'projects/:id',
     loadComponent: () =>
       import('./features/projects/project-detail/project-detail').then((m) => m.ProjectDetail),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'projects/new',
-    loadComponent: () =>
-      import('./features/projects/project-form/project-form').then((m) => m.ProjectForm),
     canActivate: [authGuard],
   },
   {

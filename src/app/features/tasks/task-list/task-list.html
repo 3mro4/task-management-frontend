@@ -1,56 +1,86 @@
-<div class="page">
+<div class="page-container">
 
-  <div class="header">
-    <h1>Tasks</h1>
-    <button class="primary">+ New Task</button>
+  <div class="page-header">
+    <div>
+      <h1>Tasks</h1>
+      <p class="text-muted">Manage all tasks</p>
+    </div>
+    <a routerLink="/tasks/new" class="btn btn-primary">+ New Task</a>
   </div>
 
-  <div class="search-box">
-    <input type="text" placeholder="Search tasks..." />
-  </div>
-
-  <div class="table-card">
-
-    <table>
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Assignee</th>
-          <th>Project</th>
-          <th>Priority</th>
-          <th>Status</th>
-          <th>Due Date</th>
-          <th></th>
-        </tr>
-      </thead>
-
-     <tbody>
-  @for (task of tasks; track task.id) {
-    <tr>
-      <td class="bold">{{ task.title }}</td>
-      <td>{{ task.assigneeName }}</td>
-      <td>{{ task.projectName }}</td>
-      <td>
-        <span class="badge priority" [ngClass]="task.priority.toLowerCase()">
-          {{ task.priority }}
-        </span>
-      </td>
-      <td>
-        <span class="badge status" [ngClass]="task.status.toLowerCase()">
-          {{ task.status }}
-        </span>
-      </td>
-      <td>{{ task.dueDate | date }}</td>
-      <td class="actions">👁 🗑</td>
-    </tr>
+  @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary"></div>
+    </div>
   }
-  @if (tasks.length === 0) {
-    <tr>
-      <td colspan="7" class="text-center text-muted py-4">No tasks found.</td>
-    </tr>
-  }
-</tbody>
-    </table>
 
-  </div>
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (!isLoading && !errorMessage) {
+    <div class="card">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Assignee</th>
+              <th>Project</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Due Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (task of tasks; track task.id) {
+              <tr class="clickable-row" (click)="viewTask(task.id)">
+                <td class="fw-500">{{ task.title }}</td>
+                <td>{{ task.assigneeName }}</td>
+                <td>{{ task.projectName }}</td>
+                <td>
+                  <span class="badge" [ngClass]="getPriorityClass(task.priority)">
+                    {{ task.priority }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="getStatusClass(task.status)">
+                    {{ formatStatus(task.status) }}
+                  </span>
+                </td>
+                <td>{{ task.dueDate | date:'mediumDate' }}</td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="deleteTask(task.id, $event)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            }
+            @if (tasks.length === 0) {
+              <tr>
+                <td colspan="7" class="text-center text-muted py-4">
+                  No tasks found. <a routerLink="/tasks/new">Add one</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    @if (totalPages > 1) {
+      <div class="pagination-row">
+        <button class="btn btn-outline-secondary btn-sm"
+          [disabled]="page === 0" (click)="prevPage()">Previous</button>
+        <span class="text-muted">Page {{ page + 1 }} of {{ totalPages }}</span>
+        <button class="btn btn-outline-secondary btn-sm"
+          [disabled]="page >= totalPages - 1" (click)="nextPage()">Next</button>
+      </div>
+    }
+  }
+
 </div>

@@ -1,41 +1,59 @@
-<div class="page">
+<div class="page-container">
 
-  <div class="header">
-    <h1>Projects</h1>
-    <button class="primary">+ New Project</button>
+  <div class="page-header">
+    <div>
+      <h1>Projects</h1>
+      <p class="text-muted">Manage all projects</p>
+    </div>
+    <a routerLink="/projects/new" class="btn btn-primary">+ New Project</a>
   </div>
 
-  <div class="table-card">
+  @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary"></div>
+    </div>
+  }
 
-    <table *ngIf="projects.length > 0; else noProjects">
-      <thead>
-        <tr>
-          <th>Project Name</th>
-          <th>Description</th>
-          <th>Created Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+  @if (!isLoading) {
+    <div class="card">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Project Name</th>
+              <th>Description</th>
+              <th>Created Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (project of projects; track project.id) {
+              <tr class="clickable-row" (click)="viewProject(project.id)">
+                <td class="fw-500">{{ project.name }}</td>
+                <td>{{ project.description }}</td>
+                <td>{{ project.createdAt | date:'mediumDate' }}</td>
+              </tr>
+            }
+            @if (projects.length === 0) {
+              <tr>
+                <td colspan="3" class="text-center text-muted py-4">
+                  No projects found. <a routerLink="/projects/new">Add one</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-      <tbody>
-        <tr *ngFor="let project of projects">
-          <td class="bold">{{ project.name }}</td>
-          <td>{{ project.description }}</td>
-          <td>{{ project.createdAt | date:'M/d/yyyy' }}</td>
-          <td class="actions">👁</td>
-        </tr>
-      </tbody>
-    </table>
+    @if (totalPages > 1) {
+      <div class="pagination-row">
+        <button class="btn btn-outline-secondary btn-sm"
+          [disabled]="page === 0" (click)="prevPage()">Previous</button>
+        <span class="text-muted">Page {{ page + 1 }} of {{ totalPages }}</span>
+        <button class="btn btn-outline-secondary btn-sm"
+          [disabled]="page >= totalPages - 1" (click)="nextPage()">Next</button>
+      </div>
+    }
+  }
 
-    <ng-template #noProjects>
-      <div class="empty-state">No projects found.</div>
-    </ng-template>
-
-    <div class="pagination" *ngIf="totalPages > 1">
-  <button (click)="prevPage()" [disabled]="page === 0">Previous</button>
-  <span>Page {{ page + 1 }} of {{ totalPages }}</span>
-  <button (click)="nextPage()" [disabled]="page >= totalPages - 1">Next</button>
-</div>
-
-  </div>
 </div>
