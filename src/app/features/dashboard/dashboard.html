@@ -53,7 +53,7 @@
             </div>
             <div>
               <div class="card-value">{{ item.value }}</div>
-              <div class="card-label">{{ item.key | titlecase }}</div>
+              <div class="card-label">{{ item.key.replace('_', ' ') | titlecase }}</div>
             </div>
           </div>
         </div>

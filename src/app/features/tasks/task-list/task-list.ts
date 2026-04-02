@@ -8,7 +8,7 @@ import { TaskDto } from '../../../core/models/task';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './task-list.html',
-  styleUrls: ['./task-list.css']
+  styleUrl: './task-list.css'
 })
 export class TaskList implements OnInit {
 

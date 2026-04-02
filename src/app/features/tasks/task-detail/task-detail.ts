@@ -7,7 +7,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-task-detail',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './task-detail.html',
   styleUrl: './task-detail.css'

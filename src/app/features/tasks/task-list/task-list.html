@@ -24,31 +24,32 @@
         </tr>
       </thead>
 
-      <tbody>
-        <tr *ngFor="let task of tasks">
-          <td class="bold">{{ task.title }}</td>
-          <td>{{ task.assigneeName }}</td>
-          <td>{{ task.projectName }}</td>
-
-          <td>
-            <span class="badge priority" [ngClass]="task.priority.toLowerCase()">
-              {{ task.priority }}
-            </span>
-          </td>
-
-          <td>
-            <span class="badge status" [ngClass]="task.status.toLowerCase()">
-              {{ task.status }}
-            </span>
-          </td>
-
-          <td>{{ task.dueDate | date }}</td>
-
-          <td class="actions">
-            👁 🗑
-          </td>
-        </tr>
-      </tbody>
+     <tbody>
+  @for (task of tasks; track task.id) {
+    <tr>
+      <td class="bold">{{ task.title }}</td>
+      <td>{{ task.assigneeName }}</td>
+      <td>{{ task.projectName }}</td>
+      <td>
+        <span class="badge priority" [ngClass]="task.priority.toLowerCase()">
+          {{ task.priority }}
+        </span>
+      </td>
+      <td>
+        <span class="badge status" [ngClass]="task.status.toLowerCase()">
+          {{ task.status }}
+        </span>
+      </td>
+      <td>{{ task.dueDate | date }}</td>
+      <td class="actions">👁 🗑</td>
+    </tr>
+  }
+  @if (tasks.length === 0) {
+    <tr>
+      <td colspan="7" class="text-center text-muted py-4">No tasks found.</td>
+    </tr>
+  }
+</tbody>
     </table>
 
   </div>

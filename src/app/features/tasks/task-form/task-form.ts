@@ -12,7 +12,6 @@ import { User } from '../../../core/models/user';
 
 @Component({
   selector: 'app-task-form',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './task-form.html',
   styleUrl: './task-form.css'
