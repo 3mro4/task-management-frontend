@@ -1,21 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectService } from '../../../core/services/project.service';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import {  ProjectDto } from '../../../core/models/project';
-=======
 import { ProjectDto } from '../../../core/models/project';
->>>>>>> feature/project-detail-page
-=======
-import { ProjectDto } from '../../../core/models/project';
->>>>>>> feature/project-detail-page
 
 @Component({
   selector: 'app-project-list',
   imports: [CommonModule],
   templateUrl: './project-list.html',
- styleUrl: './project-list.css'
+  styleUrl: './project-list.css'
 })
 export class ProjectList implements OnInit {
 
@@ -47,14 +39,14 @@ export class ProjectList implements OnInit {
     });
   }
 
-  nextPage() {
+  nextPage(): void {
     if (this.page < this.totalPages - 1) {
       this.page++;
       this.loadProjects();
     }
   }
 
-  prevPage() {
+  prevPage(): void {
     if (this.page > 0) {
       this.page--;
       this.loadProjects();
