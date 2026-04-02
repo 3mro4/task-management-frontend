@@ -1,1 +1,40 @@
-<p>task-list works!</p>
+<h2>Tasks</h2>
+
+<div *ngIf="isLoading">
+  <p>Loading...</p>
+</div>
+
+<div *ngIf="errorMessage">
+  <p>{{ errorMessage }}</p>
+</div>
+
+<table *ngIf="!isLoading && tasks.length > 0">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Assignee</th>
+      <th>Priority</th>
+      <th>Status</th>
+      <th>Project</th>
+      <th>Due Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let task of tasks">
+      <td>{{ task.title }}</td>
+      <td>{{ task.assigneeName }}</td>
+      <td>{{ task.priority }}</td>
+      <td>{{ task.status }}</td>
+      <td>{{ task.projectName }}</td>
+      <td>{{ task.dueDate | date }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<p *ngIf="!isLoading && tasks.length === 0">No tasks found.</p>
+
+<div>
+  <button (click)="prevPage()" [disabled]="page === 0">Prev</button>
+  <span>Page {{ page + 1 }} / {{ totalPages }}</span>
+  <button (click)="nextPage()" [disabled]="page >= totalPages - 1">Next</button>
+</div>
