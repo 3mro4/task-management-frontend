@@ -15,7 +15,7 @@
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
-.login-logo {
+/* .login-logo {
   width: 56px;
   height: 56px;
   background-color: #6c5ce7;
@@ -24,12 +24,20 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 1rem;
+} */
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0px;
+  padding: 0px;
 }
 
-.login-logo svg {
-  width: 28px;
-  height: 28px;
-  fill: white;
+.logo-img {
+  width: 250px;
+  height: auto;
+  mix-blend-mode: multiply;
 }
 
 .login-title {

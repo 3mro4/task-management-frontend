@@ -8,11 +8,11 @@
     <a routerLink="/dashboard" routerLinkActive="active">
       Dashboard
     </a>
-    <a routerLink="/tasks" routerLinkActive="active">
-      Tasks
-    </a>
     <a routerLink="/projects" routerLinkActive="active">
       Projects
+    </a>
+    <a routerLink="/tasks" routerLinkActive="active">
+      Tasks
     </a>
     <a routerLink="/users" routerLinkActive="active">
       Users
@@ -20,13 +20,13 @@
   </nav>
 
   <div class="user-section">
- <a routerLink="/profile" class="user-info">
-  <div class="user-avatar">{{ getInitials() }}</div>
-  <div class="user-details">
-    <span class="user-name">{{ firstName }}</span>
-    <span class="user-email">{{ email }}</span>
-  </div>
-</a>
+    <a routerLink="/profile" class="user-info">
+      <div class="user-avatar">{{ getInitials() }}</div>
+      <div class="user-details">
+        <span class="user-name">{{ firstName }}</span>
+        <span class="user-email">{{ email }}</span>
+      </div>
+    </a>
     <button class="logout-btn" (click)="logout()">
       <span>⎋</span> Logout
     </button>
