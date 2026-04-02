@@ -1,1 +1,62 @@
-<p>profile works!</p>
+<div class="page-container">
+  <h1>My Profile</h1>
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary"></div>
+    </div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  @if (!loading && !error && user) {
+    <div class="card">
+      <div class="card-body">
+
+        <div class="profile-header">
+          <div class="avatar">{{ getInitials() }}</div>
+          <div>
+            <h2>{{ getFullName() }}</h2>
+            <p class="text-muted">{{ user.email }}</p>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="info-grid">
+          <div class="info-row">
+            <span class="info-label">First Name</span>
+            <span>{{ user.firstName }}</span>
+          </div>
+          @if (user.middleName) {
+            <div class="info-row">
+              <span class="info-label">Middle Name</span>
+              <span>{{ user.middleName }}</span>
+            </div>
+          }
+          <div class="info-row">
+            <span class="info-label">Last Name</span>
+            <span>{{ user.lastName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email</span>
+            <span>{{ user.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Member Since</span>
+            <span>{{ user.createdAt | date:'longDate' }}</span>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <a [routerLink]="['/users', user.id]" class="btn btn-outline-primary">
+            Edit Profile
+          </a>
+        </div>
+
+      </div>
+    </div>
+  }
+</div>
