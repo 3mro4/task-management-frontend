@@ -50,6 +50,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'tasks',
+    loadComponent: () =>
+      import('./features/tasks/task-list/task-list').then((m) => m.TaskList),
+    canActivate: [authGuard],
+  },
+  {
     path: 'projects/:id',
     loadComponent: () =>
       import('./features/projects/project-detail/project-detail').then((m) => m.ProjectDetail),
