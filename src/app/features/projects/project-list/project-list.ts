@@ -1,7 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectService } from '../../../core/services/project.service';
+<<<<<<< HEAD
 import {  ProjectDto } from '../../../core/models/project';
+=======
+import { ProjectDto } from '../../../core/models/project';
+>>>>>>> feature/project-detail-page
 
 @Component({
   selector: 'app-project-list',
