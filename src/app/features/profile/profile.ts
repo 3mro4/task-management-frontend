@@ -22,21 +22,21 @@ export class Profile implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    const email = this.authService.getEmail();
-    this.userService.getAll().subscribe({
-      next: (res) => {
-        this.user = res.content.find((u) => u.email === email) ?? null;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.error = 'Failed to load profile.';
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-    });
-  }
+ngOnInit(): void {
+  const userId = this.authService.getUserId();
+  this.userService.getById(userId).subscribe({
+    next: (user) => {
+      this.user = user;
+      this.loading = false;
+      this.cdr.detectChanges();
+    },
+    error: () => {
+      this.error = 'Failed to load profile.';
+      this.loading = false;
+      this.cdr.detectChanges();
+    },
+  });
+}
 
   getFullName(): string {
     if (!this.user) return '';

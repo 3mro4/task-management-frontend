@@ -1,40 +1,50 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, RouterLink, CommonModule],
+  imports: [ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
 export class Register {
-  firstName = '';
-  middleName = '';
-  lastName = '';
-  email = '';
-  password = '';
   error = '';
   loading = false;
+  form: any;
 
   constructor(
+    private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.form = fb.group({
+      firstName: ['', Validators.required],
+      middleName: [''],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
 
   onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    
     this.loading = true;
     this.error = '';
 
     this.authService.register({
-      firstName: this.firstName,
-      middleName: this.middleName,
-      lastName: this.lastName,
-      email: this.email,
-      password: this.password,
+      firstName: this.form.value.firstName,
+      middleName: this.form.value.middleName,
+      lastName: this.form.value.lastName,
+      email: this.form.value.email,
+      password: this.form.value.password,
     }).subscribe({
       next: () => this.router.navigate(['/dashboard']),
       error: (err) => {

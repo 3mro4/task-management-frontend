@@ -17,6 +17,7 @@ export class AuthService {
     tap({
       next: (res) => {
         localStorage.setItem('token', res.token);
+        localStorage.setItem('userId', res.userId);
         localStorage.setItem('email', res.email);
         localStorage.setItem('firstName', res.firstName);
       }
@@ -29,6 +30,7 @@ register(request: RegisterRequest): Observable<AuthResponse> {
     tap({
       next: (res) => {
         localStorage.setItem('token', res.token);
+        localStorage.setItem('userId', res.userId);
         localStorage.setItem('email', res.email);
         localStorage.setItem('firstName', res.firstName);
       }
@@ -38,6 +40,7 @@ register(request: RegisterRequest): Observable<AuthResponse> {
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     localStorage.removeItem('email');
     localStorage.removeItem('firstName');
     this.router.navigate(['/login']);
@@ -53,5 +56,9 @@ register(request: RegisterRequest): Observable<AuthResponse> {
 
   getEmail(): string {
     return localStorage.getItem('email') ?? '';
+  }
+
+  getUserId(): string {
+    return localStorage.getItem('userId') ?? '';
   }
 }

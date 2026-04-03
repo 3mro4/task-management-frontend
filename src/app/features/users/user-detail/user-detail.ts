@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../core/services/user';
 import { User, UpdateUserRequest } from '../../../core/models/user';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-user-detail',
@@ -26,12 +27,13 @@ export class UserDetail implements OnInit {
     password: '',
   };
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService,
-    private cdr: ChangeDetectorRef
-  ) {}
+constructor(
+  private route: ActivatedRoute,
+  private router: Router,
+  private userService: UserService,
+  private authService: AuthService,
+  private cdr: ChangeDetectorRef
+) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -56,24 +58,31 @@ export class UserDetail implements OnInit {
   }
 
   save(): void {
-    if (!this.user) return;
-    this.saving = true;
-    this.saveError = '';
+  if (!this.user) return;
+  this.saving = true;
+  this.saveError = '';
 
-    this.userService.update(this.user.id, this.form).subscribe({
-      next: (updated) => {
-        this.user = updated;
-        this.editing = false;
-        this.saving = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.saveError = err.error?.message || 'Failed to update user.';
-        this.saving = false;
-        this.cdr.detectChanges();
-      },
-    });
-  }
+  this.userService.update(this.user.id, this.form).subscribe({
+    next: (updated) => {
+      this.user = updated;
+      this.editing = false;
+      this.saving = false;
+
+      // Update localStorage if user updated their own profile
+      const userId = this.authService.getUserId();
+      if (this.user?.id === userId) {
+        localStorage.setItem('firstName', updated.firstName);
+      }
+
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.saveError = err.error?.message || 'Failed to update user.';
+      this.saving = false;
+      this.cdr.detectChanges();
+    }
+  });
+}
 
   getFullName(): string {
     if (!this.user) return '';

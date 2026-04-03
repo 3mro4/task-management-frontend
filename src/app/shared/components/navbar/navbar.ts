@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../../core/services/auth';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -15,6 +16,17 @@ export class Navbar implements OnInit {
   constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.loadUserInfo();
+
+    // Refresh on every navigation
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.loadUserInfo();
+    });
+  }
+
+  loadUserInfo(): void {
     this.firstName = this.authService.getFirstName();
     this.email = this.authService.getEmail();
   }
