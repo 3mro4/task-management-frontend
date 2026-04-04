@@ -9,143 +9,108 @@
 
   <!-- Loading -->
   @if (loading) {
-    <div class="text-center py-5">
-      <div class="spinner-border text-primary"></div>
-    </div>
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+  </div>
   }
 
   <!-- Error -->
   @if (error) {
-    <div class="alert alert-danger">{{ error }}</div>
+  <div class="alert alert-danger">{{ error }}</div>
   }
 
   <!-- Content -->
   @if (!loading && !error && user) {
-    <div class="card">
-      <div class="card-body">
+  <div class="card">
+    <div class="card-body">
 
-        <!-- Avatar and name -->
-        <div class="user-header">
-          <div class="avatar">{{ getInitials() }}</div>
-          <div>
-            <h2>{{ getFullName() }}</h2>
-            <p class="text-muted">{{ user.email }}</p>
+      <!-- Avatar and name -->
+      <div class="user-header">
+        <div class="avatar">{{ getInitials() }}</div>
+        <div>
+          <h2>{{ getFullName() }}</h2>
+          <p class="text-muted">{{ user.email }}</p>
+        </div>
+        <button class="btn ms-auto" [class.btn-outline-primary]="!editing" [class.btn-outline-secondary]="editing"
+          (click)="editing = !editing">
+          {{ editing ? 'Cancel' : 'Edit' }}
+        </button>
+      </div>
+
+      <hr />
+
+      <!-- View mode -->
+      @if (!editing) {
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">First Name</span>
+          <span>{{ user.firstName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Middle Name</span>
+          <span>{{ user.middleName || '—' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Last Name</span>
+          <span>{{ user.lastName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email</span>
+          <span>{{ user.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Member Since</span>
+          <span>{{ user.createdAt | date:'longDate' }}</span>
+        </div>
+      </div>
+      }
+
+      <!-- Edit mode -->
+      @if (editing) {
+      <form (ngSubmit)="save()" class="edit-form">
+
+        <div class="name-row">
+          <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" [(ngModel)]="form.firstName" name="firstName" required />
           </div>
-          <button
-            class="btn ms-auto"
-            [class.btn-outline-primary]="!editing"
-            [class.btn-outline-secondary]="editing"
-            (click)="editing = !editing"
-          >
-            {{ editing ? 'Cancel' : 'Edit' }}
+          <div class="mb-3">
+            <label class="form-label">Middle Name</label>
+            <input type="text" class="form-control" [(ngModel)]="form.middleName" name="middleName" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" [(ngModel)]="form.lastName" name="lastName" required />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">New Password</label>
+          <input type="password" class="form-control" [(ngModel)]="form.password" name="password"
+            placeholder="Enter new password" required />
+        </div>
+
+        @if (saveError) {
+        <div class="alert alert-danger">{{ saveError }}</div>
+        }
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline-secondary" (click)="editing = false">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving">
+            @if (saving) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Save Changes
           </button>
         </div>
 
-        <hr />
+      </form>
+      }
 
-        <!-- View mode -->
-        @if (!editing) {
-          <div class="info-grid">
-            <div class="info-row">
-              <span class="info-label">First Name</span>
-              <span>{{ user.firstName }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Middle Name</span>
-              <span>{{ user.middleName || '—' }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Last Name</span>
-              <span>{{ user.lastName }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Email</span>
-              <span>{{ user.email }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Member Since</span>
-              <span>{{ user.createdAt | date:'longDate' }}</span>
-            </div>
-          </div>
-        }
-
-        <!-- Edit mode -->
-        @if (editing) {
-          <form (ngSubmit)="save()" class="edit-form">
-
-            <div class="name-row">
-              <div class="mb-3">
-                <label class="form-label">First Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  [(ngModel)]="form.firstName"
-                  name="firstName"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Middle Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  [(ngModel)]="form.middleName"
-                  name="middleName"
-                />
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Last Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  [(ngModel)]="form.lastName"
-                  name="lastName"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">New Password</label>
-              <input
-                type="password"
-                class="form-control"
-                [(ngModel)]="form.password"
-                name="password"
-                placeholder="Enter new password"
-                required
-              />
-            </div>
-
-            @if (saveError) {
-              <div class="alert alert-danger">{{ saveError }}</div>
-            }
-
-            <div class="form-actions">
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                (click)="editing = false"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                class="btn btn-primary"
-                [disabled]="saving"
-              >
-                @if (saving) {
-                  <span class="spinner-border spinner-border-sm me-2"></span>
-                }
-                Save Changes
-              </button>
-            </div>
-
-          </form>
-        }
-
-      </div>
     </div>
+  </div>
   }
 
 </div>

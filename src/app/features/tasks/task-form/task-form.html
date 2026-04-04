@@ -15,15 +15,16 @@
           <label class="form-label">Title</label>
           <input type="text" class="form-control" formControlName="title" placeholder="Enter task title" />
           @if (form.controls.title.touched && form.controls.title.invalid) {
-            <div class="text-danger small mt-1">Title is required.</div>
+          <div class="text-danger small mt-1">Title is required.</div>
           }
         </div>
 
         <div class="mb-3">
           <label class="form-label">Description</label>
-          <textarea class="form-control" formControlName="description" rows="3" placeholder="Enter task description"></textarea>
+          <textarea class="form-control" formControlName="description" rows="3"
+            placeholder="Enter task description"></textarea>
           @if (form.controls.description.touched && form.controls.description.invalid) {
-            <div class="text-danger small mt-1">Description is required.</div>
+          <div class="text-danger small mt-1">Description is required.</div>
           }
         </div>
 
@@ -32,7 +33,7 @@
             <label class="form-label">Priority</label>
             <select class="form-select" formControlName="priority">
               @for (priority of priorities; track priority) {
-                <option [value]="priority">{{ priority }}</option>
+              <option [value]="priority">{{ priority }}</option>
               }
             </select>
           </div>
@@ -40,7 +41,7 @@
             <label class="form-label">Due Date</label>
             <input type="date" class="form-control" formControlName="dueDate" />
             @if (form.controls.dueDate.touched && form.controls.dueDate.invalid) {
-              <div class="text-danger small mt-1">Due date is required.</div>
+            <div class="text-danger small mt-1">Due date is required.</div>
             }
           </div>
         </div>
@@ -51,11 +52,11 @@
             <select class="form-select" formControlName="projectId">
               <option value="">Select project</option>
               @for (project of projects; track project.id) {
-                <option [value]="project.id">{{ project.name }}</option>
+              <option [value]="project.id">{{ project.name }}</option>
               }
             </select>
             @if (form.controls.projectId.touched && form.controls.projectId.invalid) {
-              <div class="text-danger small mt-1">Project is required.</div>
+            <div class="text-danger small mt-1">Project is required.</div>
             }
           </div>
           <div class="col-md-6">
@@ -63,24 +64,24 @@
             <select class="form-select" formControlName="assigneeId">
               <option value="">Select user</option>
               @for (user of users; track user.id) {
-                <option [value]="user.id">{{ user.firstName }} {{ user.lastName }}</option>
+              <option [value]="user.id">{{ user.firstName }} {{ user.lastName }}</option>
               }
             </select>
             @if (form.controls.assigneeId.touched && form.controls.assigneeId.invalid) {
-              <div class="text-danger small mt-1">Assignee is required.</div>
+            <div class="text-danger small mt-1">Assignee is required.</div>
             }
           </div>
         </div>
 
         @if (error) {
-          <div class="alert alert-danger">{{ error }}</div>
+        <div class="alert alert-danger">{{ error }}</div>
         }
 
         <div class="form-actions">
           <button type="button" class="btn btn-outline-secondary" routerLink="/tasks">Cancel</button>
           <button type="submit" class="btn btn-primary" [disabled]="loading">
             @if (loading) {
-              <span class="spinner-border spinner-border-sm me-2"></span>
+            <span class="spinner-border spinner-border-sm me-2"></span>
             }
             Create Task
           </button>

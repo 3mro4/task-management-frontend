@@ -4,10 +4,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TaskService } from '../../../core/services/task.service';
 import { TaskDto, UpdateTaskRequest, TaskPriority, TaskStatus } from '../../../core/models/task';
+import { MunazmBadge } from '../../../shared/components/munazm-badge/munazm-badge';
+import { AlertService } from '../../../shared/services/alert';
 
 @Component({
   selector: 'app-task-detail',
-imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, MunazmBadge],
   templateUrl: './task-detail.html',
   styleUrl: './task-detail.css'
 })
@@ -34,8 +36,9 @@ export class TaskDetail implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private taskService: TaskService,
+    private alertService: AlertService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -73,6 +76,7 @@ export class TaskDetail implements OnInit {
         this.task = updated;
         this.editing = false;
         this.saving = false;
+        this.alertService.updated('Task');
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -81,20 +85,6 @@ export class TaskDetail implements OnInit {
         this.cdr.detectChanges();
       }
     });
-  }
-
-  getPriorityClass(priority: string): string {
-    const map: Record<string, string> = {
-      LOW: 'bg-success', MEDIUM: 'bg-warning text-dark', HIGH: 'bg-danger'
-    };
-    return map[priority] ?? 'bg-secondary';
-  }
-
-  getStatusClass(status: string): string {
-    const map: Record<string, string> = {
-      TODO: 'bg-secondary', IN_PROGRESS: 'bg-primary', DONE: 'bg-success'
-    };
-    return map[status] ?? 'bg-secondary';
   }
 
   formatStatus(status: string): string {

@@ -1,13 +1,15 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { DashboardService } from '../../core/services/dashboard';
 import { AuthService } from '../../core/services/auth';
 import { DashboardSummary } from '../../core/models/dashboard';
+import { BaseChartDirective } from 'ng2-charts';import { ChartData, ChartOptions, Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, BaseChartDirective],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -18,11 +20,36 @@ export class Dashboard implements OnInit {
   firstName = '';
   today = new Date();
 
-
   byStatusEntries: { key: string; value: number }[] = [];
-  byPriorityEntries: { key: string; value: number }[] = [];
   byProjectEntries: { key: string; value: number }[] = [];
   byUserEntries: { key: string; value: number }[] = [];
+
+  priorityChartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: ['#dc3545', '#fd7e14', '#198754'],
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  };
+
+  priorityChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { stepSize: 1 },
+        grid: { color: '#f0f0f0' }
+      }
+    }
+  };
 
   constructor(
     private dashboardService: DashboardService,
@@ -35,10 +62,32 @@ export class Dashboard implements OnInit {
     this.dashboardService.getSummary().subscribe({
       next: (data) => {
         this.summary = data;
-        this.byStatusEntries = this.toEntries(data.tasksByStatus);
-        this.byPriorityEntries = this.toEntries(data.tasksByPriority);
-        this.byProjectEntries = this.toEntries(data.tasksByProject);
-        this.byUserEntries = this.toEntries(data.tasksByUser);
+
+        const statusOrder = ['TODO', 'IN_PROGRESS', 'DONE'];
+        this.byStatusEntries = statusOrder
+          .filter(s => data.tasksByStatus[s] !== undefined)
+          .map(key => ({ key, value: data.tasksByStatus[key] }));
+
+        const priorityOrder = ['HIGH', 'MEDIUM', 'LOW'];
+        const orderedPriority = priorityOrder.map(key => ({
+          key,
+          value: data.tasksByPriority[key] ?? 0
+        }));
+
+        this.priorityChartData = {
+          labels: orderedPriority.map(p => p.key),
+          datasets: [{
+            data: orderedPriority.map(p => p.value),
+            backgroundColor: ['#dc3545', '#fd7e14', '#198754'],
+            borderRadius: 6,
+            borderSkipped: false,
+          }]
+        };
+
+this.byProjectEntries = this.toEntries(data.tasksByProject)
+  .sort((a, b) => b.value - a.value);
+this.byUserEntries = this.toEntries(data.tasksByUser)
+  .sort((a, b) => b.value - a.value);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -63,12 +112,26 @@ export class Dashboard implements OnInit {
     return map[status] ?? '#555';
   }
 
-  getPriorityColor(priority: string): string {
-    const map: Record<string, string> = {
-      LOW: '#198754',
-      MEDIUM: '#fd7e14',
-      HIGH: '#dc3545',
-    };
-    return map[priority] ?? '#555';
-  }
+  projectPage = 0;
+projectPageSize = 8;
+userPage = 0;
+userPageSize = 8;
+
+get pagedProjectEntries() {
+  const start = this.projectPage * this.projectPageSize;
+  return this.byProjectEntries.slice(start, start + this.projectPageSize);
+}
+
+get projectTotalPages() {
+  return Math.ceil(this.byProjectEntries.length / this.projectPageSize);
+}
+
+get pagedUserEntries() {
+  const start = this.userPage * this.userPageSize;
+  return this.byUserEntries.slice(start, start + this.userPageSize);
+}
+
+get userTotalPages() {
+  return Math.ceil(this.byUserEntries.length / this.userPageSize);
+}
 }

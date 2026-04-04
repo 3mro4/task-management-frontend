@@ -7,132 +7,110 @@
   </div>
 
   @if (isLoading) {
-    <div class="text-center py-5">
-      <div class="spinner-border text-primary"></div>
-    </div>
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+  </div>
   }
 
   @if (errorMessage) {
-    <div class="alert alert-danger">{{ errorMessage }}</div>
+  <div class="alert alert-danger">{{ errorMessage }}</div>
   }
 
   @if (!isLoading && !errorMessage && task) {
-    <div class="card">
-      <div class="card-body">
+  <div class="card">
+    <div class="card-body">
 
-<div class="task-header">
-  <h2>{{ task.title }}</h2>
-  <div class="d-flex gap-2 align-items-center">
-    <span class="badge" [ngClass]="getPriorityClass(task.priority)">
-      {{ task.priority }}
-    </span>
-    <span class="badge" [ngClass]="getStatusClass(task.status)">
-      {{ formatStatus(task.status) }}
-    </span>
-    <button
-      class="btn btn-sm ms-2"
-      [class.btn-outline-primary]="!editing"
-      [class.btn-outline-secondary]="editing"
-      (click)="editing = !editing"
-    >
-      {{ editing ? 'Cancel' : 'Edit' }}
-    </button>
-  </div>
-</div>
-
-        <hr />
-
-        <!-- View mode -->
-        @if (!editing) {
-          <div class="info-grid">
-            <div class="info-row">
-              <span class="info-label">Description</span>
-              <span>{{ task.description }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Project</span>
-              <span>{{ task.projectName }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Assignee</span>
-              <span>{{ task.assigneeName }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Due Date</span>
-              <span>{{ task.dueDate | date:'longDate' }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Created</span>
-              <span>{{ task.createdAt | date:'longDate' }}</span>
-            </div>
-          </div>
-        }
-
-        <!-- Edit mode -->
-        @if (editing) {
-          <form (ngSubmit)="save()" class="edit-form">
-
-            <div class="mb-3">
-              <label class="form-label">Description</label>
-              <textarea
-                class="form-control"
-                [(ngModel)]="form.description"
-                name="description"
-                rows="3"
-                required
-              ></textarea>
-            </div>
-
-            <div class="row g-3 mb-3">
-              <div class="col-md-4">
-                <label class="form-label">Priority</label>
-                <select class="form-select" [(ngModel)]="form.priority" name="priority">
-                  @for (p of priorities; track p) {
-                    <option [value]="p">{{ p }}</option>
-                  }
-                </select>
-              </div>
-              <div class="col-md-4">
-                <label class="form-label">Status</label>
-                <select class="form-select" [(ngModel)]="form.status" name="status">
-                  @for (s of statuses; track s) {
-                    <option [value]="s">{{ formatStatus(s) }}</option>
-                  }
-                </select>
-              </div>
-              <div class="col-md-4">
-                <label class="form-label">Due Date</label>
-                <input
-                  type="date"
-                  class="form-control"
-                  [(ngModel)]="form.dueDate"
-                  name="dueDate"
-                  required
-                />
-              </div>
-            </div>
-
-            @if (saveError) {
-              <div class="alert alert-danger">{{ saveError }}</div>
-            }
-
-            <div class="form-actions">
-              <button type="button" class="btn btn-outline-secondary" (click)="editing = false">
-                Cancel
-              </button>
-              <button type="submit" class="btn btn-primary" [disabled]="saving">
-                @if (saving) {
-                  <span class="spinner-border spinner-border-sm me-2"></span>
-                }
-                Save Changes
-              </button>
-            </div>
-
-          </form>
-        }
-
+      <div class="task-header">
+        <h2>{{ task.title }}</h2>
+        <div class="d-flex gap-2 align-items-center">
+          <app-munazm-badge type="priority" [value]="task.priority" />
+          <app-munazm-badge type="status" [value]="task.status" />
+          <button class="btn btn-sm ms-2" [class.btn-outline-primary]="!editing" [class.btn-outline-secondary]="editing"
+            (click)="editing = !editing">
+            {{ editing ? 'Cancel' : 'Edit' }}
+          </button>
+        </div>
       </div>
+
+      <hr />
+
+      @if (!editing) {
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Description</span>
+          <span>{{ task.description }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Project</span>
+          <span>{{ task.projectName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Assignee</span>
+          <span>{{ task.assigneeName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Due Date</span>
+          <span>{{ task.dueDate | date:'longDate' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Created</span>
+          <span>{{ task.createdAt | date:'longDate' }}</span>
+        </div>
+      </div>
+      }
+
+      @if (editing) {
+      <form (ngSubmit)="save()" class="edit-form">
+
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" [(ngModel)]="form.description" name="description" rows="3" required></textarea>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <label class="form-label">Priority</label>
+            <select class="form-select" [(ngModel)]="form.priority" name="priority">
+              @for (p of priorities; track p) {
+              <option [value]="p">{{ p }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Status</label>
+            <select class="form-select" [(ngModel)]="form.status" name="status">
+              @for (s of statuses; track s) {
+              <option [value]="s">{{ formatStatus(s) }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Due Date</label>
+            <input type="date" class="form-control" [(ngModel)]="form.dueDate" name="dueDate" required />
+          </div>
+        </div>
+
+        @if (saveError) {
+        <div class="alert alert-danger">{{ saveError }}</div>
+        }
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline-secondary" (click)="editing = false">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving">
+            @if (saving) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Save Changes
+          </button>
+        </div>
+
+      </form>
+      }
+
     </div>
+  </div>
   }
 
 </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../core/services/user';
 import { User } from '../../../core/models/user';
+import { AlertService } from '../../../shared/services/alert';
 
 @Component({
   selector: 'app-user-list',
@@ -21,8 +22,9 @@ export class UserList implements OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
+    private alertService: AlertService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -65,14 +67,20 @@ export class UserList implements OnInit {
 
   deleteUser(id: string, event: Event): void {
     event.stopPropagation();
-    if (confirm('Are you sure you want to delete this user?')) {
-      this.userService.delete(id).subscribe({
-        next: () => this.loadUsers(),
-        error: (err) => {
-          alert(err.error?.message || 'Failed to delete user.');
-        },
-      });
-    }
+    const user = this.users.find(u => u.id === id);
+    const name = user ? this.getFullName(user) : 'User';
+
+    this.alertService.confirmDelete(name).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.delete(id).subscribe({
+          next: () => {
+            this.alertService.deleted(name);
+            this.loadUsers();
+          },
+          error: (err) => this.alertService.error(err.error?.message || 'Failed to delete user.')
+        });
+      }
+    });
   }
 
   getFullName(user: User): string {

@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { User, UpdateUserRequest } from '../models/user';
 import { RegisterRequest } from '../models/auth';
 import { PageResponse } from '../models/page-response';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private readonly baseUrl = 'http://localhost:8080/api/v1/users';
+private readonly baseUrl = `${environment.apiUrl}/users`;
 
   constructor(private http: HttpClient) {}
 

@@ -10,142 +10,160 @@
 
   <!-- Loading -->
   @if (loading) {
-    <div class="text-center py-5">
-      <div class="spinner-border text-primary"></div>
-    </div>
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+  </div>
   }
 
   <!-- Error -->
   @if (error) {
-    <div class="alert alert-danger">{{ error }}</div>
+  <div class="alert alert-danger">{{ error }}</div>
   }
 
   <!-- Content -->
   @if (!loading && !error && summary) {
 
-    <!-- Welcome Banner -->
-    <div class="welcome-banner mb-4">
-      <div>
-        <h2>Welcome back, {{ firstName }}!</h2>
-        <p>Here's what's happening with your tasks today.</p>
+  <!-- Welcome Banner -->
+  <div class="welcome-banner mb-4">
+    <div>
+      <h2>Welcome back, {{ firstName }}!</h2>
+      <p>Here's what's happening with your tasks today.</p>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="summary-card">
+        <div class="card-icon total-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" />
+          </svg>
+        </div>
+        <div>
+          <div class="card-value">{{ summary.totalTasks }}</div>
+          <div class="card-label">Total Tasks</div>
+        </div>
       </div>
     </div>
 
-    <!-- Summary Cards -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-3">
-        <div class="summary-card">
-          <div class="card-icon total-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
-          </div>
-          <div>
-            <div class="card-value">{{ summary.totalTasks }}</div>
-            <div class="card-label">Total Tasks</div>
-          </div>
+    @for (item of byStatusEntries; track item.key) {
+    <div class="col-md-3">
+      <div class="summary-card">
+        <div class="card-icon" [style.background]="getStatusColor(item.key) + '20'"
+          [style.color]="getStatusColor(item.key)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+          </svg>
+        </div>
+        <div>
+          <div class="card-value">{{ item.value }}</div>
+          <div class="card-label">{{ item.key.replace('_', ' ') | titlecase }}</div>
         </div>
       </div>
+    </div>
+    }
+  </div>
 
-      @for (item of byStatusEntries; track item.key) {
-        <div class="col-md-3">
-          <div class="summary-card">
-            <div class="card-icon" [style.background]="getStatusColor(item.key) + '20'" [style.color]="getStatusColor(item.key)">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
-            </div>
-            <div>
-              <div class="card-value">{{ item.value }}</div>
-              <div class="card-label">{{ item.key.replace('_', ' ') | titlecase }}</div>
-            </div>
-          </div>
+  <!-- Charts and Tables Row -->
+  <div class="row g-3 mb-4">
+
+<!-- Tasks by Priority -->
+<div class="col-md-6">
+  <div class="card h-100">
+    <div class="card-body">
+      <h5 class="card-title mb-4">Tasks by Priority</h5>
+      <canvas baseChart
+        [data]="priorityChartData"
+        [options]="priorityChartOptions"
+        type="bar">
+      </canvas>
+    </div>
+  </div>
+</div>
+
+    <!-- Tasks by Project -->
+   <div class="col-md-6">
+  <div class="card h-100">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Tasks by Project</h5>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Project Name</th>
+            <th class="text-end">Task Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of pagedProjectEntries; track item.key) {
+            <tr>
+              <td>{{ item.key }}</td>
+              <td class="text-end">{{ item.value }}</td>
+            </tr>
+          }
+          @if (byProjectEntries.length === 0) {
+            <tr>
+              <td colspan="2" class="text-center text-muted">No projects yet</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (projectTotalPages > 1) {
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button class="btn btn-sm btn-outline-secondary"
+            [disabled]="projectPage === 0"
+            (click)="projectPage = projectPage - 1">Previous</button>
+          <span class="text-muted small">{{ projectPage + 1 }} / {{ projectTotalPages }}</span>
+          <button class="btn btn-sm btn-outline-secondary"
+            [disabled]="projectPage >= projectTotalPages - 1"
+            (click)="projectPage = projectPage + 1">Next</button>
         </div>
       }
     </div>
+  </div>
+</div>
 
-    <!-- Charts and Tables Row -->
-    <div class="row g-3 mb-4">
+  </div>
 
-      <!-- Tasks by Priority -->
-      <div class="col-md-6">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title mb-4">Tasks by Priority</h5>
-            @for (item of byPriorityEntries; track item.key) {
-              <div class="priority-row mb-3">
-                <div class="d-flex justify-content-between mb-1">
-                  <span class="fw-500" [style.color]="getPriorityColor(item.key)">{{ item.key }}</span>
-                  <span class="fw-500">{{ item.value }}</span>
-                </div>
-                <div class="progress" style="height: 8px;">
-                  <div
-                    class="progress-bar"
-                    [style.width.%]="summary.totalTasks ? (item.value / summary.totalTasks) * 100 : 0"
-                    [style.background]="getPriorityColor(item.key)"
-                  ></div>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
+  <!-- Tasks by Assignee -->
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Tasks by Assignee</h5>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Assignee Name</th>
+          <th class="text-end">Task Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of pagedUserEntries; track item.key) {
+          <tr>
+            <td>{{ item.key }}</td>
+            <td class="text-end">{{ item.value }}</td>
+          </tr>
+        }
+        @if (byUserEntries.length === 0) {
+          <tr>
+            <td colspan="2" class="text-center text-muted">No assignees yet</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (userTotalPages > 1) {
+      <div class="d-flex justify-content-between align-items-center mt-2">
+        <button class="btn btn-sm btn-outline-secondary"
+          [disabled]="userPage === 0"
+          (click)="userPage = userPage - 1">Previous</button>
+        <span class="text-muted small">{{ userPage + 1 }} / {{ userTotalPages }}</span>
+        <button class="btn btn-sm btn-outline-secondary"
+          [disabled]="userPage >= userTotalPages - 1"
+          (click)="userPage = userPage + 1">Next</button>
       </div>
-
-      <!-- Tasks by Project -->
-      <div class="col-md-6">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title mb-3">Tasks by Project</h5>
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Project Name</th>
-                  <th class="text-end">Task Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (item of byProjectEntries; track item.key) {
-                  <tr>
-                    <td>{{ item.key }}</td>
-                    <td class="text-end">{{ item.value }}</td>
-                  </tr>
-                }
-                @if (byProjectEntries.length === 0) {
-                  <tr>
-                    <td colspan="2" class="text-center text-muted">No projects yet</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Tasks by Assignee -->
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title mb-3">Tasks by Assignee</h5>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Assignee Name</th>
-              <th class="text-end">Task Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of byUserEntries; track item.key) {
-              <tr>
-                <td>{{ item.key }}</td>
-                <td class="text-end">{{ item.value }}</td>
-              </tr>
-            }
-            @if (byUserEntries.length === 0) {
-              <tr>
-                <td colspan="2" class="text-center text-muted">No assignees yet</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
+    }
+  </div>
+</div>
 
   }
 

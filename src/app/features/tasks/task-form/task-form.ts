@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TaskService } from '../../../core/services/task.service';
 import { ProjectService } from '../../../core/services/project.service';
@@ -8,6 +8,7 @@ import { UserService } from '../../../core/services/user';
 import { CreateTaskRequest, TaskPriority } from '../../../core/models/task';
 import { ProjectDto } from '../../../core/models/project';
 import { User } from '../../../core/models/user';
+import { AlertService } from '../../../shared/services/alert';
 
 @Component({
   selector: 'app-task-form',
@@ -18,30 +19,30 @@ import { User } from '../../../core/models/user';
 export class TaskForm implements OnInit {
 
   projects: ProjectDto[] = [];
-users: User[] = [];
-loading = false;
-error = '';
-priorities: TaskPriority[] = ['LOW', 'MEDIUM', 'HIGH'];
-form: any;
+  users: User[] = [];
+  loading = false;
+  error = '';
+  priorities: TaskPriority[] = ['LOW', 'MEDIUM', 'HIGH'];
+  form: any;
 
-constructor(
-  private fb: FormBuilder,
-  private taskService: TaskService,
-  private projectService: ProjectService,
-  private userService: UserService,
-  private router: Router,
-  private cdr: ChangeDetectorRef
-) {
-  this.form = this.fb.group({
-    title: ['', Validators.required],
-    description: ['', Validators.required],
-    priority: ['MEDIUM' as TaskPriority, Validators.required],
-    dueDate: ['', Validators.required],
-    projectId: ['', Validators.required],
-    assigneeId: ['', Validators.required]
-  });
-}
-
+  constructor(
+    private fb: FormBuilder,
+    private taskService: TaskService,
+    private projectService: ProjectService,
+    private userService: UserService,
+    private router: Router,
+    private alertService: AlertService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.form = this.fb.group({
+      title: ['', Validators.required],
+      description: ['', Validators.required],
+      priority: ['MEDIUM' as TaskPriority, Validators.required],
+      dueDate: ['', Validators.required],
+      projectId: ['', Validators.required],
+      assigneeId: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.projectService.getAll(0, 100).subscribe({
@@ -71,7 +72,11 @@ constructor(
     };
 
     this.taskService.create(request).subscribe({
-      next: (task) => this.router.navigate(['/tasks', task.id]),
+      next: (task) => {
+        this.alertService.added('Task').then(() => {
+          this.router.navigate(['/tasks', task.id]);
+        });
+      },
       error: (err) => {
         this.error = err.error?.message || 'Failed to create task.';
         this.loading = false;

@@ -3,40 +3,42 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../models/auth';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly baseUrl = 'http://localhost:8080/api/v1/auth';
+  private readonly baseUrl = `${environment.apiUrl}/auth`;
 
-  constructor(private http: HttpClient, private router: Router) {}
 
- login(request: LoginRequest): Observable<AuthResponse> {
-  return this.http.post<AuthResponse>(`${this.baseUrl}/login`, request).pipe(
-    tap({
-      next: (res) => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('userId', res.userId);
-        localStorage.setItem('email', res.email);
-        localStorage.setItem('firstName', res.firstName);
-      }
-    })
-  );
-}
+  constructor(private http: HttpClient, private router: Router) { }
 
-register(request: RegisterRequest): Observable<AuthResponse> {
-  return this.http.post<AuthResponse>(`${this.baseUrl}/register`, request).pipe(
-    tap({
-      next: (res) => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('userId', res.userId);
-        localStorage.setItem('email', res.email);
-        localStorage.setItem('firstName', res.firstName);
-      }
-    })
-  );
-}
+  login(request: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, request).pipe(
+      tap({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('userId', res.userId);
+          localStorage.setItem('email', res.email);
+          localStorage.setItem('firstName', res.firstName);
+        }
+      })
+    );
+  }
+
+  register(request: RegisterRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.baseUrl}/register`, request).pipe(
+      tap({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('userId', res.userId);
+          localStorage.setItem('email', res.email);
+          localStorage.setItem('firstName', res.firstName);
+        }
+      })
+    );
+  }
 
   logout(): void {
     localStorage.removeItem('token');
@@ -60,5 +62,9 @@ register(request: RegisterRequest): Observable<AuthResponse> {
 
   getUserId(): string {
     return localStorage.getItem('userId') ?? '';
+  }
+
+  updateFirstName(firstName: string): void {
+    localStorage.setItem('firstName', firstName);
   }
 }

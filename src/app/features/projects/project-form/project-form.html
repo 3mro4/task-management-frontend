@@ -13,32 +13,23 @@
 
         <div class="mb-3">
           <label class="form-label">Project Name</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="name"
-            placeholder="Enter project name"
-          />
+          <input type="text" class="form-control" formControlName="name" placeholder="Enter project name" />
           @if (form.controls.name.touched && form.controls.name.invalid) {
-            <div class="text-danger small mt-1">Project name is required.</div>
+          <div class="text-danger small mt-1">Project name is required.</div>
           }
         </div>
 
         <div class="mb-3">
           <label class="form-label">Description</label>
-          <textarea
-            class="form-control"
-            formControlName="description"
-            rows="4"
-            placeholder="Enter project description"
-          ></textarea>
+          <textarea class="form-control" formControlName="description" rows="4"
+            placeholder="Enter project description"></textarea>
           @if (form.controls.description.touched && form.controls.description.invalid) {
-            <div class="text-danger small mt-1">Description is required.</div>
+          <div class="text-danger small mt-1">Description is required.</div>
           }
         </div>
 
         @if (error) {
-          <div class="alert alert-danger">{{ error }}</div>
+        <div class="alert alert-danger">{{ error }}</div>
         }
 
         <div class="form-actions">
@@ -47,7 +38,7 @@
           </button>
           <button type="submit" class="btn btn-primary" [disabled]="loading">
             @if (loading) {
-              <span class="spinner-border spinner-border-sm me-2"></span>
+            <span class="spinner-border spinner-border-sm me-2"></span>
             }
             Create Project
           </button>

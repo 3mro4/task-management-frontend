@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TaskService } from '../../../core/services/task.service';
 import { TaskDto } from '../../../core/models/task';
+import { MunazmBadge } from '../../../shared/components/munazm-badge/munazm-badge';
+import { AlertService } from '../../../shared/services/alert';
 
 @Component({
   selector: 'app-task-list',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MunazmBadge],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css'
 })
@@ -19,11 +21,18 @@ export class TaskList implements OnInit {
   isLoading = false;
   errorMessage = '';
 
+  private priorityOrder: Record<string, number> = {
+    HIGH: 0,
+    MEDIUM: 1,
+    LOW: 2
+  };
+
   constructor(
     private taskService: TaskService,
     private router: Router,
+    private alertService: AlertService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadTasks();
@@ -34,7 +43,9 @@ export class TaskList implements OnInit {
     this.errorMessage = '';
     this.taskService.getAll(this.page, this.size).subscribe({
       next: (res) => {
-        this.tasks = res.content;
+        this.tasks = res.content.sort((a, b) =>
+          (this.priorityOrder[a.priority] ?? 3) - (this.priorityOrder[b.priority] ?? 3)
+        );
         this.totalPages = res.totalPages;
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -53,12 +64,20 @@ export class TaskList implements OnInit {
 
   deleteTask(id: string, event: Event): void {
     event.stopPropagation();
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.taskService.delete(id).subscribe({
-        next: () => this.loadTasks(),
-        error: (err) => alert(err.error?.message || 'Failed to delete task.')
-      });
-    }
+    const task = this.tasks.find(t => t.id === id);
+    const title = task ? task.title : 'Task';
+
+    this.alertService.confirmDelete(title).then((result) => {
+      if (result.isConfirmed) {
+        this.taskService.delete(id).subscribe({
+          next: () => {
+            this.alertService.deleted(title);
+            this.loadTasks();
+          },
+          error: (err) => this.alertService.error(err.error?.message || 'Failed to delete task.')
+        });
+      }
+    });
   }
 
   nextPage(): void {
@@ -67,23 +86,5 @@ export class TaskList implements OnInit {
 
   prevPage(): void {
     if (this.page > 0) { this.page--; this.loadTasks(); }
-  }
-
-  getPriorityClass(priority: string): string {
-    const map: Record<string, string> = {
-      LOW: 'bg-success', MEDIUM: 'bg-warning text-dark', HIGH: 'bg-danger'
-    };
-    return map[priority] ?? 'bg-secondary';
-  }
-
-  getStatusClass(status: string): string {
-    const map: Record<string, string> = {
-      TODO: 'bg-secondary', IN_PROGRESS: 'bg-primary', DONE: 'bg-success'
-    };
-    return map[status] ?? 'bg-secondary';
-  }
-
-  formatStatus(status: string): string {
-    return status.replace('_', ' ');
   }
 }
